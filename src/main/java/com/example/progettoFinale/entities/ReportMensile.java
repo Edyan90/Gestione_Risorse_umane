@@ -9,7 +9,7 @@ import java.util.UUID;
 @Setter
 public class ReportMensile {
     private UUID dipendenteId;
-    private String nomeDipendente;
+    private String nomeCompletoDipendente;
     private String mese;
     private Long giorniLavorati;
     private Long giorniAssenti;
@@ -17,7 +17,7 @@ public class ReportMensile {
 
     public ReportMensile(UUID dipendenteId, String nomeDipendente, String mese, Long giorniLavorati, Long giorniAssenti, Long ferieRichieste) {
         this.dipendenteId = dipendenteId;
-        this.nomeDipendente = nomeDipendente;
+        this.nomeCompletoDipendente = nomeDipendente;
         this.mese = mese;
         this.giorniLavorati = giorniLavorati;
         this.giorniAssenti = giorniAssenti;
