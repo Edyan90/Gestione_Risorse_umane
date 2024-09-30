@@ -1,6 +1,5 @@
 package com.example.progettoFinale.tools;
 
-import Epicode.organizzatoreEventi.entities.Utente;
 import com.example.progettoFinale.entities.Dipendente;
 import kong.unirest.core.HttpResponse;
 import kong.unirest.core.JsonNode;
