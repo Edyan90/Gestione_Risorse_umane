@@ -3,6 +3,9 @@ package com.example.progettoFinale.security;
 import Epicode.organizzatoreEventi.entities.Utente;
 import Epicode.organizzatoreEventi.exceptions.UnauthorizedEx;
 import Epicode.organizzatoreEventi.services.UtentiService;
+import com.example.progettoFinale.entities.Dipendente;
+import com.example.progettoFinale.exceptions.UnauthorizedEx;
+import com.example.progettoFinale.services.DipendentiService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +26,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
     @Autowired
     private JWTTools jwtTools;
     @Autowired
-    private UtentiService utentiService;
+    private DipendentiService dipendentiService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -31,10 +34,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if (authHeader == null || !authHeader.startsWith("Bearer "))
             throw new UnauthorizedEx("Inserisci correttamente il token!");
         String accessToken = authHeader.substring(7);
-        System.out.println("TOken: " + accessToken);
+        System.out.println("Token: " + accessToken);
         jwtTools.verifyToken(accessToken);
-        String currenteIdutente = jwtTools.extractIDfromToken(accessToken);
-        Utente currentUtente = this.utentiService.findByID(UUID.fromString(currenteIdutente));
+        String currenteIdDipendenti = jwtTools.extractIDfromToken(accessToken);
+        Dipendente currentUtente = this.dipendentiService.findByID(UUID.fromString(currenteIdDipendenti));
         Authentication authentication = new UsernamePasswordAuthenticationToken(currentUtente, null, currentUtente.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
