@@ -1,8 +1,6 @@
 package com.example.progettoFinale.security;
 
-import Epicode.organizzatoreEventi.entities.Utente;
-import Epicode.organizzatoreEventi.exceptions.UnauthorizedEx;
-import Epicode.organizzatoreEventi.services.UtentiService;
+
 import com.example.progettoFinale.entities.Dipendente;
 import com.example.progettoFinale.exceptions.UnauthorizedEx;
 import com.example.progettoFinale.services.DipendentiService;
