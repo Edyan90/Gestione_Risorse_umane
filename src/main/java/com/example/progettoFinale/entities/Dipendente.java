@@ -1,6 +1,7 @@
 package com.example.progettoFinale.entities;
 
 import com.example.progettoFinale.enums.RuoloType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,7 +30,9 @@ public class Dipendente implements UserDetails {
     private RuoloType ruolo;
     private Double stipendio;
     private String username;
+    @JsonIgnore
     private String password;
+    private String avatar;
 
     @OneToMany(mappedBy = "dipendente")
     private List<Presenza> presenze;
