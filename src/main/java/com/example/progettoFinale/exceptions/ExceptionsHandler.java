@@ -1,5 +1,6 @@
 package com.example.progettoFinale.exceptions;
 
+import com.example.progettoFinale.recordsDTO.ErrorPayload;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -7,8 +7,8 @@ public class NotFoundEx extends RuntimeException {
         super("L'entità con id " + id + " non è stata trovata!");
     }
 
-    public NotFoundEx(String email) {
-        super("L'entità con l'email " + email + " non è stata trovata!");
+    public NotFoundEx(String username) {
+        super("L'entità con l'username " + username + " non è stata trovata!");
     }
 }
 
