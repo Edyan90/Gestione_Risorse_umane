@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
@@ -37,7 +38,7 @@ public class Dipendente implements UserDetails {
     @OneToMany(mappedBy = "dipendente")
     private List<Presenza> presenze;
     @OneToMany(mappedBy = "dipendente")
-    private  List<Ferie> ferie;
+    private List<Ferie> ferie;
 
     public Dipendente(String nome, String cognome, String email, String username, Double stipendio, String password) {
         this.nome = nome;
