@@ -5,6 +5,7 @@ import com.example.progettoFinale.exceptions.BadRequestEx;
 import com.example.progettoFinale.recordsDTO.DipendenteDTO;
 import com.example.progettoFinale.recordsDTO.DipendenteRespDTO;
 import com.example.progettoFinale.recordsDTO.LoginDTO;
+import com.example.progettoFinale.recordsDTO.TokenDTO;
 import com.example.progettoFinale.services.AuthService;
 import com.example.progettoFinale.services.DipendentiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,14 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public DipendenteRespDTO login(@RequestBody @Validated LoginDTO loginDTO) {
-        return new DipendenteRespDTO(this.authService.checkCredenzialiAndGeneraToken(loginDTO));
+    public TokenDTO login(@RequestBody @Validated LoginDTO loginDTO) {
+        return new TokenDTO(this.authService.checkCredenzialiAndGeneraToken(loginDTO));
     }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public DipendenteRespDTO createDipendente(@RequestBody @Validated DipendenteDTO dipendenteDTO,
-                                              BindingResult validationResult) {
+//    @PreAuthorize("hasAuthority('ADMIN')")
+    public DipendenteRespDTO createDipendente(@RequestBody @Validated DipendenteDTO dipendenteDTO, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(objectError -> objectError.getDefaultMessage()).collect(Collectors.joining(", "));
@@ -41,5 +42,4 @@ public class AuthController {
             return new DipendenteRespDTO(String.valueOf(dipendente.getId()));
         }
     }
-
 }
