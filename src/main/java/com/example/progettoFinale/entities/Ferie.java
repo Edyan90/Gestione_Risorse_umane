@@ -14,7 +14,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-
+@Table(name = "ferie")
 public class Ferie {
     @Id
     @GeneratedValue
@@ -23,8 +23,9 @@ public class Ferie {
     @ManyToOne
     @JoinColumn(name = "dipendente_id")
     private Dipendente dipendente;
-
+    @Column(name = "data_inizio")
     private LocalDate dataInizio;
+    @Column(name = "data_fine")
     private LocalDate dataFine;
     @Enumerated(EnumType.STRING)
     private StatoFerie stato;

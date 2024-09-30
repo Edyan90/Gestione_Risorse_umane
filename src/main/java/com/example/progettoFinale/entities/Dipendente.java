@@ -19,6 +19,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "dipendenti")
 public class Dipendente implements UserDetails {
     @Id
     @GeneratedValue

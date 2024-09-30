@@ -8,10 +8,12 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.UUID;
+
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "presenze")
 public class Presenza {
     @Id
     @GeneratedValue
