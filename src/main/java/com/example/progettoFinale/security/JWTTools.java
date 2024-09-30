@@ -1,8 +1,8 @@
 package com.example.progettoFinale.security;
 
 
-import Epicode.organizzatoreEventi.entities.Utente;
-import Epicode.organizzatoreEventi.exceptions.UnauthorizedEx;
+import com.example.progettoFinale.entities.Dipendente;
+import com.example.progettoFinale.exceptions.UnauthorizedEx;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,11 +16,11 @@ public class JWTTools {
     @Value("${jwt.secret}")
     private String secret;
 
-    public String createToken(Utente utente) {
+    public String createToken(Dipendente dipendente) {
         return Jwts.builder()
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
-                .subject(String.valueOf(utente.getId()))
+                .subject(String.valueOf(dipendente.getId()))
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
                 .compact();
     }
