@@ -24,7 +24,7 @@ import java.util.UUID;
 @Service
 public class DipendentiService {
     @Autowired
-    private  DipendentiRepository dipendentiRepository;
+    private DipendentiRepository dipendentiRepository;
     @Autowired
     private PasswordEncoder bcrypt;
     @Autowired
@@ -32,26 +32,26 @@ public class DipendentiService {
     @Autowired
     private Cloudinary cloudinary;
 
-    public Page<Dipendente> findAll(int page, int size, String sortBy){
-        if (page>10) page =10;
-        Pageable pageable= PageRequest.of(page,size, Sort.by(sortBy));
+    public Page<Dipendente> findAll(int page, int size, String sortBy) {
+        if (page > 10) page = 10;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return this.dipendentiRepository.findAll(pageable);
     }
 
 
-     public Dipendente findByID(UUID id){
-        return this.dipendentiRepository.findById(id).orElseThrow(()->new NotFoundEx(id));
-     }
+    public Dipendente findByID(UUID id) {
+        return this.dipendentiRepository.findById(id).orElseThrow(() -> new NotFoundEx(id));
+    }
 
 
-     public Dipendente saveDipendente (DipendenteDTO dipendenteDTO){
+    public Dipendente saveDipendente(DipendenteDTO dipendenteDTO) {
         this.dipendentiRepository.findByEmail(dipendenteDTO.email()).ifPresent(dipendente -> {
-            throw new BadRequestEx("l'email "+dipendenteDTO.email()+" è già in uso!");
+            throw new BadRequestEx("l'email " + dipendenteDTO.email() + " è già in uso!");
         });
-        this.dipendentiRepository.findByUsername(dipendenteDTO.username()).ifPresent(dipendente ->{
-            throw new BadRequestEx("l'username "+dipendenteDTO.username()+" è già stato utilizzato!");
-        } );
-        Dipendente dipendente= new Dipendente(
+        this.dipendentiRepository.findByUsername(dipendenteDTO.username()).ifPresent(dipendente -> {
+            throw new BadRequestEx("l'username " + dipendenteDTO.username() + " è già stato utilizzato!");
+        });
+        Dipendente dipendente = new Dipendente(
                 dipendenteDTO.nome(),
                 dipendenteDTO.cognome(),
                 dipendenteDTO.email(),
@@ -59,40 +59,40 @@ public class DipendentiService {
                 Double.parseDouble(dipendenteDTO.stipendio()),
                 bcrypt.encode(dipendenteDTO.password())
         );
-         switch (dipendenteDTO.ruolo().toLowerCase()) {
-             case "dipendente":
-                 dipendente.setRuolo(RuoloType.DIPENDENTE);
-                 break;
-             case "manager":
+        switch (dipendenteDTO.ruolo().toLowerCase()) {
+            case "dipendente":
+                dipendente.setRuolo(RuoloType.DIPENDENTE);
+                break;
+            case "manager":
                 dipendente.setRuolo(RuoloType.MANAGER);
-                 break;
+                break;
 
-             default:
-                 throw new BadRequestEx("Stato non valido: " + dipendenteDTO.ruolo() +
-                         ". I valori validi sono: DIPENDENTE E MANAGER.");
-         }
-         dipendente.setAvatar("https://ui-avatars.com/api/?name=" + dipendenteDTO.nome() + "+" + dipendenteDTO.cognome());
-         this.dipendentiRepository.save(dipendente);
-         return dipendente;
-     }
-
-
-     public Dipendente saveNewAdmin(UUID dipendenteID){
-        Dipendente dipendente= this.findByID(dipendenteID);
-        dipendente.setRuolo(RuoloType.ADMIN);
-         mailgunSender.sendRegistrationEmail(dipendente);
+            default:
+                throw new BadRequestEx("Stato non valido: " + dipendenteDTO.ruolo() +
+                        ". I valori validi sono: DIPENDENTE E MANAGER.");
+        }
+        dipendente.setAvatar("https://ui-avatars.com/api/?name=" + dipendenteDTO.nome() + "+" + dipendenteDTO.cognome());
+        this.dipendentiRepository.save(dipendente);
         return dipendente;
-     }
+    }
+
+
+    public Dipendente saveNewAdmin(UUID dipendenteID) {
+        Dipendente dipendente = this.findByID(dipendenteID);
+        dipendente.setRuolo(RuoloType.ADMIN);
+        mailgunSender.sendRegistrationEmail(dipendente);
+        return dipendente;
+    }
 
     public void findAndDelete(UUID utenteID) {
         Dipendente dipendente = this.findByID(utenteID);
         this.dipendentiRepository.delete(dipendente);
     }
 
-    public Dipendente updateDipendente(UUID dipendenteID,DipendenteDTO dipendenteDTO){
-        Dipendente found=this.findByID(dipendenteID);
+    public Dipendente updateDipendente(UUID dipendenteID, DipendenteDTO dipendenteDTO) {
+        Dipendente found = this.findByID(dipendenteID);
         this.dipendentiRepository.findByEmail(dipendenteDTO.email()).ifPresent(dipendente -> {
-            if (!dipendente.getEmail().equals(dipendenteDTO.email())){
+            if (!dipendente.getEmail().equals(dipendenteDTO.email())) {
                 throw new BadRequestEx("L'email " + dipendenteDTO.email() + " è già in uso!");
             }
         });
@@ -127,5 +127,9 @@ public class DipendentiService {
         } catch (IOException e) {
             throw new BadRequestEx("Errore nel caricamento del file. Verifica il formato e le dimensioni!");
         }
+    }
+
+    public Dipendente findByUsername(String username) {
+        return this.dipendentiRepository.findByUsername(username).orElseThrow(() -> new NotFoundEx(username));
     }
 }
