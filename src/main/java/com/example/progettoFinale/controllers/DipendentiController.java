@@ -21,7 +21,7 @@ import java.util.UUID;
 @RequestMapping("/dipendenti")
 public class DipendentiController {
     @Autowired
-    DipendentiService dipendentiService;
+    private DipendentiService dipendentiService;
 
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN)")
@@ -43,7 +43,7 @@ public class DipendentiController {
         this.dipendentiService.findAndDelete(dipendenteID);
     }
 
-    @PostMapping("/me/avatar")
+    @PatchMapping("/me/avatar")
     public DipendenteRespDTO avatarUpload(@AuthenticationPrincipal Dipendente currentAuthenticationDipendenti, @RequestParam("avatar") MultipartFile image) {
         this.dipendentiService.avatarUpload(currentAuthenticationDipendenti.getId(), image);
         return new DipendenteRespDTO(String.valueOf(currentAuthenticationDipendenti.getId()));
@@ -57,15 +57,21 @@ public class DipendentiController {
     }
 
     @PutMapping("/me")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public DipendenteRespDTO updateProfile(@AuthenticationPrincipal Dipendente currentAuthenticateDipendente, @RequestBody @Validated DipendenteDTO dipendenteDTO) {
         return new DipendenteRespDTO(String.valueOf(this.dipendentiService.updateDipendente(currentAuthenticateDipendente.getId(), dipendenteDTO).getId()));
     }
 
-    @PostMapping
+    @PutMapping("/add-admin")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public DipendenteRespDTO addNewAdmin(@RequestBody @Validated NewAdminDTO newAdminDTO) {
         return new DipendenteRespDTO(String.valueOf(this.dipendentiService.saveNewAdmin(UUID.fromString(newAdminDTO.adminID())).getId()));
+    }
+
+    @GetMapping("/{dipendenteID}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Dipendente getDipendente(@PathVariable UUID dipendenteID) {
+        return this.dipendentiService.findByID(dipendenteID);
     }
 }

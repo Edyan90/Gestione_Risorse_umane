@@ -1,6 +1,7 @@
 package com.example.progettoFinale.entities;
 
 import com.example.progettoFinale.enums.StatoFerie;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class Ferie {
     private UUID id;
     @ManyToOne
     @JoinColumn(name = "dipendente_id")
+    @JsonIgnore
     private Dipendente dipendente;
     @Column(name = "data_inizio")
     private LocalDate dataInizio;

@@ -43,7 +43,6 @@ public class DipendentiService {
         return this.dipendentiRepository.findById(id).orElseThrow(() -> new NotFoundEx(id));
     }
 
-
     public Dipendente saveDipendente(DipendenteDTO dipendenteDTO) {
         this.dipendentiRepository.findByEmail(dipendenteDTO.email()).ifPresent(dipendente -> {
             throw new BadRequestEx("l'email " + dipendenteDTO.email() + " è già in uso!");
@@ -66,7 +65,6 @@ public class DipendentiService {
             case "manager":
                 dipendente.setRuolo(RuoloType.MANAGER);
                 break;
-
             default:
                 throw new BadRequestEx("Stato non valido: " + dipendenteDTO.ruolo() +
                         ". I valori validi sono: DIPENDENTE E MANAGER.");
@@ -81,6 +79,7 @@ public class DipendentiService {
         Dipendente dipendente = this.findByID(dipendenteID);
         dipendente.setRuolo(RuoloType.ADMIN);
         mailgunSender.sendRegistrationEmail(dipendente);
+        this.dipendentiRepository.save(dipendente);
         return dipendente;
     }
 

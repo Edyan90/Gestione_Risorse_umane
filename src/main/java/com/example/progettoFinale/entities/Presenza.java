@@ -1,5 +1,6 @@
 package com.example.progettoFinale.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class Presenza {
 
     @ManyToOne
     @JoinColumn(name = "dipendente_id")
+    @JsonIgnore
     private Dipendente dipendente;
 
     private LocalDate data;

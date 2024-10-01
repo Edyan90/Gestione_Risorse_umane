@@ -1,5 +1,6 @@
 package com.example.progettoFinale.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class BustaPaga {
     private UUID id;
     @ManyToOne
     @JoinColumn(name = "dipendente_id")
+    @JsonIgnore
     private Dipendente dipendente;
     private LocalDate data;
     @Column(name = "importo_totale")

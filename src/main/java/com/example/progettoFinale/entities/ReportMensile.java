@@ -23,4 +23,5 @@ public class ReportMensile {
         this.giorniAssenti = giorniAssenti;
         this.ferieRichieste = ferieRichieste;
     }
+
 }
