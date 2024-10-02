@@ -32,7 +32,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if (authHeader == null || !authHeader.startsWith("Bearer "))
             throw new UnauthorizedEx("Inserisci correttamente il token!");
         String accessToken = authHeader.substring(7);
-        System.out.println("Token: " + accessToken);
+//        System.out.println("Token: " + accessToken);
         jwtTools.verifyToken(accessToken);
         String currenteIdDipendenti = jwtTools.extractIDfromToken(accessToken);
         Dipendente currentUtente = this.dipendentiService.findByID(UUID.fromString(currenteIdDipendenti));
