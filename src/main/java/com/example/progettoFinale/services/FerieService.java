@@ -3,11 +3,14 @@ package com.example.progettoFinale.services;
 
 import com.example.progettoFinale.entities.Dipendente;
 import com.example.progettoFinale.entities.Ferie;
+import com.example.progettoFinale.enums.RuoloType;
 import com.example.progettoFinale.enums.StatoFerie;
 import com.example.progettoFinale.exceptions.BadRequestEx;
 import com.example.progettoFinale.exceptions.NotFoundEx;
+import com.example.progettoFinale.exceptions.UnauthorizedEx;
 import com.example.progettoFinale.recordsDTO.FerieApprovazioneDTO;
 import com.example.progettoFinale.recordsDTO.FerieDTO;
+import com.example.progettoFinale.recordsDTO.FerieListDateStatoDTO;
 import com.example.progettoFinale.recordsDTO.FerieRespDTO;
 import com.example.progettoFinale.repositories.FerieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.awt.font.TextHitInfo;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,22 +40,36 @@ public class FerieService {
         return this.ferieRepository.findById(ferieID).orElseThrow(() -> new NotFoundEx(ferieID));
     }
 
-    public Ferie saveFerie(FerieDTO ferieDTO) {
-        Dipendente dipendente = this.dipendentiService.findByID(UUID.fromString(ferieDTO.dipendenteID()));
-        Ferie ferie = new Ferie(dipendente, ferieDTO.dataInizio(), ferieDTO.dataFine(), StatoFerie.RICHIESTO);
+    public Ferie saveFerie(FerieDTO ferieDTO, Dipendente currentDipendente) {
+        Dipendente found = this.dipendentiService.findByID(UUID.fromString(ferieDTO.dipendenteID()));
+        if (!currentDipendente.getId().equals(found) &&
+                !currentDipendente.getRuolo().equals(RuoloType.ADMIN)) {
+            throw new UnauthorizedEx("Non sei autorizzato a creare ferie per un altro dipendente");
+        }
+        Ferie ferie = new Ferie(found, ferieDTO.dataInizio(), ferieDTO.dataFine(), StatoFerie.RICHIESTO);
         this.ferieRepository.save(ferie);
         return ferie;
     }
 
-    public void findAndDeleteFerie(UUID ferieID) {
+    public void findAndDeleteFerie(UUID ferieID, Dipendente currentDipendente) {
         Ferie found = this.findByID(ferieID);
+
+        if (!found.getDipendente().getId().equals(currentDipendente.getId()) &&
+                !currentDipendente.getRuolo().equals(RuoloType.ADMIN)) {
+            throw new UnauthorizedEx("Non sei autorizzato a cancellare questa richiesta di ferie.");
+        }
+
         this.ferieRepository.delete(found);
     }
 
-    public Ferie updateFerie(UUID ferieID, FerieDTO ferieDTO) {
+    public Ferie updateFerie(UUID ferieID, FerieDTO ferieDTO, Dipendente dipendente) {
         Ferie found = this.findByID(ferieID);
+        if (!found.getDipendente().getId().equals(dipendente.getId()) &&
+                !dipendente.getRuolo().equals(RuoloType.ADMIN)) {
+            throw new UnauthorizedEx("Non sei autorizzato a cancellare questa richiesta di ferie.");
+        }
         found.setDataInizio(ferieDTO.dataInizio());
-        found.setDataInizio(ferieDTO.dataFine());
+        found.setDataFine(ferieDTO.dataFine());
         this.ferieRepository.save(found);
         return found;
     }
@@ -73,9 +89,37 @@ public class FerieService {
                 found.setStato(StatoFerie.RIFIUTATO);
                 break;
             default:
-                throw new BadRequestEx("Stato non valido: "+ferieApprovazioneDTO.approvazione()+". I valori validi sono APPROVATO O RIFIUTATO.")
+                throw new BadRequestEx("Stato non valido: " + ferieApprovazioneDTO.approvazione() + ". I valori validi sono APPROVATO O RIFIUTATO.");
         }
         return new FerieRespDTO(String.valueOf(this.ferieRepository.save(found)));
-
     }
+
+    public List<Ferie> ferieStatoList(String stato) {
+        switch (stato.toLowerCase()) {
+            case "richiesto":
+                return this.ferieRepository.findByStato(StatoFerie.RICHIESTO);
+
+            case "approvato":
+                return this.ferieRepository.findByStato(StatoFerie.APPROVATO);
+
+            case "rifiutato":
+                return this.ferieRepository.findByStato(StatoFerie.RIFIUTATO);
+
+            default:
+                throw new BadRequestEx("Stato non valido " + stato + " .I valori validi sono RICHIESTO, APPROVATO e RIFIUTATO");
+        }
+    }
+
+    public List<Ferie> ferieStatoTraDate(FerieListDateStatoDTO ferieListDateStatoDTO) {
+        StatoFerie statoFerie;
+        try {
+            statoFerie = StatoFerie.valueOf(ferieListDateStatoDTO.stato().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestEx("Stato non valido " + ferieListDateStatoDTO.stato() + ". I valori validi sono RICHIESTO, APPROVATO e RIFIUTATO");
+        }
+
+        return this.ferieRepository.findByDateRangeAndStato(ferieListDateStatoDTO.dataInizio(), ferieListDateStatoDTO.dataFine(), statoFerie);
+    }
+
+
 }
