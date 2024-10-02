@@ -24,7 +24,7 @@ public class DipendentiController {
     private DipendentiService dipendentiService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN)")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Page<Dipendente> findAll(@RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size,
                                     @RequestParam(defaultValue = "nome") String sortBy) {
@@ -38,7 +38,7 @@ public class DipendentiController {
 
     @DeleteMapping("/{dipendenteID}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('ADMIN)")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void findAndDelete(@PathVariable UUID dipendenteID) {
         this.dipendentiService.findAndDelete(dipendenteID);
     }
@@ -70,7 +70,7 @@ public class DipendentiController {
     }
 
     @GetMapping("/{dipendenteID}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public Dipendente getDipendente(@PathVariable UUID dipendenteID) {
         return this.dipendentiService.findByID(dipendenteID);
     }

@@ -96,10 +96,10 @@ public class DipendentiService {
             }
         });
         found.setNome(dipendenteDTO.nome());
-        found.setNome(dipendenteDTO.cognome());
+        found.setCognome(dipendenteDTO.cognome());
         found.setEmail(dipendenteDTO.email());
-        found.setNome(dipendenteDTO.stipendio());
-        found.setNome(dipendenteDTO.username());
+        found.setStipendio(Double.parseDouble(dipendenteDTO.stipendio()));
+        found.setUsername(dipendenteDTO.username());
         found.setNome(dipendenteDTO.password());
         switch (dipendenteDTO.ruolo().toLowerCase()) {
             case "dipendente":
