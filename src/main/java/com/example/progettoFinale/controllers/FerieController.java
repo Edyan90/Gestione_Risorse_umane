@@ -79,4 +79,16 @@ public class FerieController {
     public void deleteFerie(@PathVariable UUID ferieID, @AuthenticationPrincipal Dipendente currentDipendente) {
         this.ferieService.findAndDeleteFerie(ferieID, currentDipendente);
     }
+
+    @GetMapping("/storico")
+    public List<Ferie> storicoFerieDipendente(@AuthenticationPrincipal Dipendente currentDipendente) {
+        return this.ferieService.getStorico(currentDipendente);
+    }
+
+    @GetMapping("/{ferieID}")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
+    public Ferie findByID(@PathVariable UUID ferieID) {
+        return this.ferieService.findByID(ferieID);
+    }
+
 }
