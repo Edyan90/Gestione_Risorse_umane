@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,12 +42,22 @@ public class FerieService {
     }
 
     public Ferie saveFerie(FerieDTO ferieDTO, Dipendente currentDipendente) {
-        Dipendente found = this.dipendentiService.findByID(UUID.fromString(ferieDTO.dipendenteID()));
-        if (!currentDipendente.getId().equals(found) &&
-                !currentDipendente.getRuolo().equals(RuoloType.ADMIN)) {
-            throw new UnauthorizedEx("Non sei autorizzato a creare ferie per un altro dipendente");
+//        Dipendente found = this.dipendentiService.findByID(UUID.fromString(ferieDTO.dipendenteID()));
+//        if (!currentDipendente.getId().equals(found) &&
+//                !currentDipendente.getRuolo().equals(RuoloType.ADMIN)) {
+//            throw new UnauthorizedEx("Non sei autorizzato a creare ferie per un altro dipendente");
+//        }
+        if (ferieDTO.dataInizio().isBefore(LocalDate.now()) || ferieDTO.dataInizio().equals(LocalDate.now())) {
+            throw new BadRequestEx("la data d'inizio non può essere prima o uguale alla data odierna");
         }
-        Ferie ferie = new Ferie(found, ferieDTO.dataInizio(), ferieDTO.dataFine(), StatoFerie.RICHIESTO);
+        if (ferieDTO.dataFine().isBefore(ferieDTO.dataInizio()) || ferieDTO.dataFine().isEqual(ferieDTO.dataInizio())) {
+            throw new BadRequestEx("La data di fine non può essere prima o uguale alla data d'inizio.");
+        }
+        List<Ferie> ferieSovrapposte = ferieRepository.findFerieSovrapposte(currentDipendente, ferieDTO.dataInizio(), ferieDTO.dataFine());
+        if (!ferieSovrapposte.isEmpty()) {
+            throw new BadRequestEx("Esiste già una richiesta di ferie sovrapposta per questo dipendente.");
+        }
+        Ferie ferie = new Ferie(currentDipendente, ferieDTO.dataInizio(), ferieDTO.dataFine(), StatoFerie.RICHIESTO);
         this.ferieRepository.save(ferie);
         return ferie;
     }
@@ -67,6 +78,16 @@ public class FerieService {
         if (!found.getDipendente().getId().equals(dipendente.getId()) &&
                 !dipendente.getRuolo().equals(RuoloType.ADMIN)) {
             throw new UnauthorizedEx("Non sei autorizzato a cancellare questa richiesta di ferie.");
+        }
+        if (ferieDTO.dataInizio().isBefore(LocalDate.now()) || ferieDTO.dataInizio().equals(LocalDate.now())) {
+            throw new BadRequestEx("la data d'inizio non può essere prima o uguale alla data odierna");
+        }
+        if (ferieDTO.dataFine().isBefore(ferieDTO.dataInizio()) || ferieDTO.dataFine().isEqual(ferieDTO.dataInizio())) {
+            throw new BadRequestEx("La data di fine non può essere prima o uguale alla data d'inizio.");
+        }
+        List<Ferie> ferieSovrapposte = ferieRepository.findFerieSovrapposte(dipendente, ferieDTO.dataInizio(), ferieDTO.dataFine());
+        if (!ferieSovrapposte.isEmpty()) {
+            throw new BadRequestEx("Esiste già una richiesta di ferie sovrapposta per questo dipendente.");
         }
         found.setDataInizio(ferieDTO.dataInizio());
         found.setDataFine(ferieDTO.dataFine());
@@ -121,5 +142,8 @@ public class FerieService {
         return this.ferieRepository.findByDateRangeAndStato(ferieListDateStatoDTO.dataInizio(), ferieListDateStatoDTO.dataFine(), statoFerie);
     }
 
+    public List<Ferie> getStorico(Dipendente dipendente) {
+        return this.ferieRepository.findByStoricoFerie(dipendente);
+    }
 
 }
