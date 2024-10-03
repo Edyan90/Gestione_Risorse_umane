@@ -27,6 +27,9 @@ public interface FerieRepository extends JpaRepository<Ferie, UUID> {
 
     @Query("SELECT f FROM Ferie f WHERE f.dipendente = :dipendente AND " +
             "(f.dataInizio <= :dataFine AND f.dataFine >= :dataInizio)")
-    List<Ferie> findFerieSovrapposte(Dipendente dipendente, LocalDate dataInizio, LocalDate dataFine);
+    List<Ferie> findFerieSovrapposte(@Param("dipendente") Dipendente dipendente,
+                                     @Param("dataInizio") LocalDate dataInizio,
+                                     @Param("dataFine") LocalDate dataFine);
+
 
 }
