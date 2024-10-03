@@ -1,5 +1,6 @@
 package com.example.progettoFinale.entities;
 
+import com.example.progettoFinale.enums.StatoPresenza;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -28,10 +29,13 @@ public class Presenza {
 
     private LocalDate data;
     private Boolean presente;
+    @Enumerated(EnumType.STRING)
+    private StatoPresenza statoPresenza;
 
-    public Presenza(Dipendente dipendente, LocalDate data, Boolean presente) {
+    public Presenza(Dipendente dipendente, LocalDate data, Boolean presente, StatoPresenza statoPresenza) {
         this.dipendente = dipendente;
         this.data = data;
         this.presente = presente;
+        this.statoPresenza = statoPresenza;
     }
 }
