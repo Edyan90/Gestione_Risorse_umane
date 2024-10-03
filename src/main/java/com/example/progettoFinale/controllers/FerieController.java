@@ -48,7 +48,8 @@ public class FerieController {
     @PutMapping("/{ferieID}/stato-ferie")
     @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public FerieRespDTO editFerieStatus(@PathVariable UUID ferieID, @RequestBody @Validated FerieApprovazioneDTO ferieApprovazioneDTO) {
-        return new FerieRespDTO(this.ferieService.approvazioneFerie(ferieID, ferieApprovazioneDTO).ferieID());
+        this.ferieService.approvazioneFerie(ferieID, ferieApprovazioneDTO);
+        return new FerieRespDTO(String.valueOf(ferieID));
     }
 
     @GetMapping("/stato-ferie") // esempio ->stato-ferie?approvazione=APPROVATO
