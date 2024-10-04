@@ -72,7 +72,7 @@ public class PresenzeController {
     public List<Presenza> presenzeMensileDipendente(@PathVariable UUID dipendenteID,
                                                     @RequestParam int mese,
                                                     @RequestParam int anno) {
-        return this.presenzeService.presenzaMensile(dipendenteID, mese, anno);
+        return this.presenzeService.presenzaMensiletraDate(dipendenteID, mese, anno);
     }
 
     @GetMapping("/{presenzaID}")
@@ -82,7 +82,8 @@ public class PresenzeController {
     }
 
     @PatchMapping("/{presenzaID}/status")
-    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")//fdc44cef-9309-40f2-b237-c1acfac2c8d3/presenza-mensile?mese=10&anno=2024
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
+//fdc44cef-9309-40f2-b237-c1acfac2c8d3/presenza-mensile?mese=10&anno=2024
     public PresenzaRespDTO approvaPresenza(@PathVariable UUID presenzaID, PresenzaApprovazioneDTO presenzaApprovazioneDTO) {
         this.presenzeService.approvaPresenza(presenzaID, presenzaApprovazioneDTO);
         return new PresenzaRespDTO("Presenza approvata", presenzaID);
