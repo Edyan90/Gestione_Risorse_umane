@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface PresenzaRepository extends JpaRepository<Presenza, UUID> {
-    List<Presenza> findByDipendentId(UUID dipendenteId);
+    List<Presenza> findByDipendente(Dipendente dipendente);
 
     @Query("SELECT p FROM Presenza p WHERE p.dipendente = :dipendente AND MONTH(p.data) = :mese AND YEAR(p.data) = :anno")
     List<Presenza> findByStoricoPresenzeMensile(@Param("dipendente") Dipendente dipendente,
