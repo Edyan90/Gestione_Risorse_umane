@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public record PresenzaDTO(
         @NotNull(message = "La data è obbligatoria in formato YYYY-MM-DD!")
         LocalDate data,
-        @NotEmpty(message = "la presenza è obbligatoria in TRUE o FALSE")
+        @NotNull(message = "la presenza è obbligatoria in TRUE o FALSE")
         Boolean presente,
         @NotEmpty(message = "Il dipendenteID è obbligatorio")
         String dipendenteID
