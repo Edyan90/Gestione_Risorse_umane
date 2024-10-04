@@ -90,7 +90,7 @@ public class PresenzeService {
     }
 
     //QUESTO è PER IL MANAGER
-    public List<Presenza> presenzaMerensile(UUID dipendenteID, int mese, int anno) {
+    public List<Presenza> presenzaMensiletraDate(UUID dipendenteID, int mese, int anno) {
         Dipendente dipendente = this.dipendentiService.findByID(dipendenteID);
         if (mese < 1 || mese > 12 || anno < 2020 || anno > LocalDate.now().getYear()) {
             throw new BadRequestEx("Il riferimento al mese non è adatto, scegliere tra 1 e 12 altrimenti controlla che l'anno richiesto non sia inferire a 2020 o superiore all'anno corrente");
