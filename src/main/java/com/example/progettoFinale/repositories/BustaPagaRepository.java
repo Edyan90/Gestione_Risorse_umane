@@ -13,13 +13,14 @@ import java.util.UUID;
 @Repository
 public interface BustaPagaRepository extends JpaRepository<BustaPaga, UUID> {
 
-    List<BustaPaga> findByDipendente(UUID dipendente);
+    List<BustaPaga> findByDipendente(Dipendente dipendente);
 
-    @Query("SELECT b FROM BustaPaga b WHERE b.dipendente = :dipendente AND MONTH(b.data) = :mese AND YEAR(b.data) = :anno")
+    @Query("SELECT b FROM BustaPaga b WHERE b.dipendente = :dipendente AND EXTRACT(MONTH FROM b.data) = :mese AND EXTRACT(YEAR FROM b.data) = :anno")
     List<BustaPaga> findByMeseEAnno(@Param("dipendente") Dipendente dipendente,
                                     @Param("mese") int mese,
                                     @Param("anno") int anno);
 
+    @Query("SELECT b FROM BustaPaga b WHERE b.dipendente=:dipendente AND YEAR(b.data)=:anno")
     List<BustaPaga> findByDipendenteAndAnno(@Param("dipendente") Dipendente dipendente,
                                             @Param("anno") int anno);
 }

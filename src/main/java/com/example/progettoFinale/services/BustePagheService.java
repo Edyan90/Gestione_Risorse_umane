@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,10 +71,7 @@ public class BustePagheService {
     public List<BustaPaga> bustepagaDipendente(UUID dipendenteID, Dipendente dipendenteAutenticato) {
         this.checkAuthorization(dipendenteAutenticato);
         Dipendente dipendente = this.dipendentiService.findByID(dipendenteID);
-        if (!dipendente.getId().equals(dipendenteAutenticato.getId())) {
-            throw new UnauthorizedEx("Non sei autorizzato a eseguire questa azione");
-        }
-        return this.bustaPagaRepository.findByDipendente(dipendente.getId());
+        return this.bustaPagaRepository.findByDipendente(dipendente);
     }
 
     public List<BustaPaga> findByMeseEAnno(UUID dipendenteID, int mese, int anno, Dipendente dipendenteAutenticato) {
@@ -81,6 +79,9 @@ public class BustePagheService {
         Dipendente dipendente = this.dipendentiService.findByID(dipendenteID);
         if (!dipendente.getId().equals(dipendenteAutenticato.getId())) {
             throw new UnauthorizedEx("Non sei autorizzato a eseguire questa azione");
+        }
+        if (mese < 1 || mese > 12 || anno < 2020 || anno > LocalDate.now().getYear()) {
+            throw new BadRequestEx("Il riferimento al mese non è adatto, scegliere tra 1 e 12 altrimenti controlla che l'anno richiesto non sia inferiore a 2020 o superiore all'anno corrente");
         }
         return this.bustaPagaRepository.findByMeseEAnno(dipendente, mese, anno);
     }
