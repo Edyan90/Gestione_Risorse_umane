@@ -7,6 +7,8 @@ import com.example.progettoFinale.enums.StatoPresenza;
 import com.example.progettoFinale.exceptions.BadRequestEx;
 import com.example.progettoFinale.exceptions.NotFoundEx;
 import com.example.progettoFinale.exceptions.UnauthorizedEx;
+import com.example.progettoFinale.recordsDTO.PresenzaApprovazionMensileDTO;
+import com.example.progettoFinale.recordsDTO.PresenzaApprovazioneDTO;
 import com.example.progettoFinale.recordsDTO.PresenzaDTO;
 import com.example.progettoFinale.repositories.PresenzaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +79,7 @@ public class PresenzeService {
 
     public List<Presenza> presenzeDelDipendente(UUID dipendenteID) {
         Dipendente dipendente = this.dipendentiService.findByID(dipendenteID);
-        return this.presenzaRepository.findByDipendentId(dipendente.getId());
+        return this.presenzaRepository.findByDipendente(dipendente);
     }
 
     public List<Presenza> presenzaMensile(Dipendente dipendente, int mese, int anno) {
@@ -87,15 +89,35 @@ public class PresenzeService {
         return this.presenzaRepository.findByStoricoPresenzeMensile(dipendente, mese, anno);
     }
 
-    public void approvaPresenza(UUID presenzaID, Dipendente manager) {
+    //QUESTO è PER IL MANAGER
+    public List<Presenza> presenzaMensile(UUID dipendenteID, int mese, int anno) {
+        Dipendente dipendente = this.dipendentiService.findByID(dipendenteID);
+        if (mese < 1 || mese > 12 || anno < 2020 || anno > LocalDate.now().getYear()) {
+            throw new BadRequestEx("Il riferimento al mese non è adatto, scegliere tra 1 e 12 altrimenti controlla che l'anno richiesto non sia inferire a 2020 o superiore all'anno corrente");
+        }
+        return this.presenzaRepository.findByStoricoPresenzeMensile(dipendente, mese, anno);
+    }
+
+    public void approvaPresenza(UUID presenzaID, PresenzaApprovazioneDTO presenzaApprovazioneDTO) {
         Presenza presenza = this.findByID(presenzaID);
-        presenza.setStatoPresenza(StatoPresenza.APPROVATO);
+        switch (presenzaApprovazioneDTO.statoPresenza().toLowerCase()) {
+            case "approvato":
+                presenza.setStatoPresenza(StatoPresenza.APPROVATO);
+                break;
+            case "non_approvata":
+                presenza.setStatoPresenza(StatoPresenza.NON_APPROVATA);
+                break;
+            default:
+                throw new BadRequestEx("Stato non valido " + presenzaApprovazioneDTO.statoPresenza() + " .I valori validi sono APPROVATO O NON_APPROVATA");
+        }
+
         this.presenzaRepository.save(presenza);
     }
 
-    public void approvaPresenzeMensili(Dipendente dipendente, int mese, int anno, String statoPresenza) {
-        List<Presenza> presenze = presenzaMensile(dipendente, mese, anno);
-        switch (statoPresenza.toLowerCase()) {
+    public void approvaPresenzeMensili(UUID dipendenteID, PresenzaApprovazionMensileDTO presenzaApprovazionMensileDTO) {
+        Dipendente dipendente = this.dipendentiService.findByID(dipendenteID);
+        List<Presenza> presenze = presenzaMensile(dipendente, presenzaApprovazionMensileDTO.mese(), presenzaApprovazionMensileDTO.anno());
+        switch (presenzaApprovazionMensileDTO.statoPresenza().toLowerCase()) {
             case "approvato":
                 presenze.stream().filter(presenza -> presenza.getStatoPresenza().equals(StatoPresenza.IN_ATTESA))
                         .forEach(presenza -> {
@@ -109,7 +131,7 @@ public class PresenzeService {
                         });
                 break;
             default:
-                throw new BadRequestEx("Stato non valido " + statoPresenza + " .I valori validi sono APPROVATO O NON_APPROVATA");
+                throw new BadRequestEx("Stato non valido " + presenzaApprovazionMensileDTO.statoPresenza() + " .I valori validi sono APPROVATO O NON_APPROVATA");
         }
         this.presenzaRepository.saveAll(presenze);
 
