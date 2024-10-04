@@ -40,6 +40,8 @@ public class Dipendente implements UserDetails {
     private List<Presenza> presenze;
     @OneToMany(mappedBy = "dipendente", fetch = FetchType.EAGER)
     private List<Ferie> ferie;
+    @OneToMany(mappedBy = "dipendente", fetch = FetchType.EAGER)
+    private List<BustaPaga> bustepaga;
 
     public Dipendente(String nome, String cognome, String email, String username, Double stipendio, String password) {
         this.nome = nome;
