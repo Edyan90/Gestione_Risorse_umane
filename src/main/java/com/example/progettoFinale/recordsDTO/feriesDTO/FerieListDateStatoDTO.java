@@ -1,4 +1,4 @@
-package com.example.progettoFinale.recordsDTO;
+package com.example.progettoFinale.recordsDTO.feriesDTO;
 
 import jakarta.validation.constraints.NotNull;
 

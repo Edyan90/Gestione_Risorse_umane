@@ -1,4 +1,4 @@
-package com.example.progettoFinale.recordsDTO;
+package com.example.progettoFinale.recordsDTO.bustepagaDTO;
 
 import java.util.UUID;
 

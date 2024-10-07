@@ -1,4 +1,4 @@
-package com.example.progettoFinale.recordsDTO;
+package com.example.progettoFinale.recordsDTO.dipendentiDTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
