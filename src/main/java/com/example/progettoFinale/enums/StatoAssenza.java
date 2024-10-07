@@ -1,5 +1,5 @@
 package com.example.progettoFinale.enums;
 
 public enum StatoAssenza {
-    APPROVATO, IN_ATTESA, RIFIUTATO
+    APPROVATO, NON_APPROVATA, IN_ATTESA
 }

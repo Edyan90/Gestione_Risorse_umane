@@ -11,8 +11,7 @@ public record GiustificazioneDTO(
         LocalDate data,
         @NotEmpty(message = "Il motivo non può essere vuoto.")
         @Size(max = 255, message = "Il motivo non può superare i 255 caratteri.")
-        String motivo,
-        @NotEmpty(message = "Lo stato non può essere vuoto.")
-        String stato
+        String motivo
+
 ) {
 }

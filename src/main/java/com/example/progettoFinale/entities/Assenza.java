@@ -32,10 +32,10 @@ public class Assenza {
     @Enumerated(EnumType.STRING)
     private StatoAssenza stato;
 
-    public Assenza(Dipendente dipendente, LocalDate data, String motivo, StatoAssenza stato) {
+    public Assenza(Dipendente dipendente, LocalDate data, String motivo) {
         this.dipendente = dipendente;
         this.data = data;
         this.motivo = motivo;
-        this.stato = stato;
+        this.stato = StatoAssenza.IN_ATTESA;
     }
 }
