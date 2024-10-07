@@ -6,7 +6,7 @@ import com.example.progettoFinale.entities.Dipendente;
 import com.example.progettoFinale.enums.RuoloType;
 import com.example.progettoFinale.exceptions.BadRequestEx;
 import com.example.progettoFinale.exceptions.NotFoundEx;
-import com.example.progettoFinale.recordsDTO.DipendenteDTO;
+import com.example.progettoFinale.recordsDTO.dipendentiDTO.DipendenteDTO;
 import com.example.progettoFinale.repositories.DipendentiRepository;
 import com.example.progettoFinale.tools.MailgunSender;
 import org.springframework.beans.factory.annotation.Autowired;

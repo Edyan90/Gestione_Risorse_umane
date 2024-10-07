@@ -2,10 +2,10 @@ package com.example.progettoFinale.controllers;
 
 import com.example.progettoFinale.entities.Dipendente;
 import com.example.progettoFinale.entities.Presenza;
-import com.example.progettoFinale.recordsDTO.PresenzaApprovazionMensileDTO;
-import com.example.progettoFinale.recordsDTO.PresenzaApprovazioneDTO;
-import com.example.progettoFinale.recordsDTO.PresenzaDTO;
-import com.example.progettoFinale.recordsDTO.PresenzaRespDTO;
+import com.example.progettoFinale.recordsDTO.presenzeDTO.PresenzaApprovazionMensileDTO;
+import com.example.progettoFinale.recordsDTO.presenzeDTO.PresenzaApprovazioneDTO;
+import com.example.progettoFinale.recordsDTO.presenzeDTO.PresenzaDTO;
+import com.example.progettoFinale.recordsDTO.presenzeDTO.PresenzaRespDTO;
 import com.example.progettoFinale.services.PresenzeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

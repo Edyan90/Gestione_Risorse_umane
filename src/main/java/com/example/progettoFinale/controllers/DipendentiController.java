@@ -1,9 +1,9 @@
 package com.example.progettoFinale.controllers;
 
 import com.example.progettoFinale.entities.Dipendente;
-import com.example.progettoFinale.recordsDTO.DipendenteDTO;
-import com.example.progettoFinale.recordsDTO.DipendenteRespDTO;
 import com.example.progettoFinale.recordsDTO.NewAdminDTO;
+import com.example.progettoFinale.recordsDTO.dipendentiDTO.DipendenteDTO;
+import com.example.progettoFinale.recordsDTO.dipendentiDTO.DipendenteRespDTO;
 import com.example.progettoFinale.services.DipendentiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

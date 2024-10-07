@@ -3,8 +3,8 @@ package com.example.progettoFinale.controllers;
 
 import com.example.progettoFinale.entities.BustaPaga;
 import com.example.progettoFinale.entities.Dipendente;
-import com.example.progettoFinale.recordsDTO.BustaPagaDTO;
-import com.example.progettoFinale.recordsDTO.BustaPagaRespDTO;
+import com.example.progettoFinale.recordsDTO.bustepagaDTO.BustaPagaDTO;
+import com.example.progettoFinale.recordsDTO.bustepagaDTO.BustaPagaRespDTO;
 import com.example.progettoFinale.services.BustePagheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

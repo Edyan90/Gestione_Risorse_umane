@@ -2,10 +2,10 @@ package com.example.progettoFinale.controllers;
 
 import com.example.progettoFinale.entities.Dipendente;
 import com.example.progettoFinale.exceptions.BadRequestEx;
-import com.example.progettoFinale.recordsDTO.DipendenteDTO;
-import com.example.progettoFinale.recordsDTO.DipendenteRespDTO;
 import com.example.progettoFinale.recordsDTO.LoginDTO;
 import com.example.progettoFinale.recordsDTO.TokenDTO;
+import com.example.progettoFinale.recordsDTO.dipendentiDTO.DipendenteDTO;
+import com.example.progettoFinale.recordsDTO.dipendentiDTO.DipendenteRespDTO;
 import com.example.progettoFinale.services.AuthService;
 import com.example.progettoFinale.services.DipendentiService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,7 +6,7 @@ import com.example.progettoFinale.enums.RuoloType;
 import com.example.progettoFinale.exceptions.BadRequestEx;
 import com.example.progettoFinale.exceptions.NotFoundEx;
 import com.example.progettoFinale.exceptions.UnauthorizedEx;
-import com.example.progettoFinale.recordsDTO.BustaPagaDTO;
+import com.example.progettoFinale.recordsDTO.bustepagaDTO.BustaPagaDTO;
 import com.example.progettoFinale.repositories.BustaPagaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

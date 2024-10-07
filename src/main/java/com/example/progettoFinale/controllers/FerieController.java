@@ -2,10 +2,10 @@ package com.example.progettoFinale.controllers;
 
 import com.example.progettoFinale.entities.Dipendente;
 import com.example.progettoFinale.entities.Ferie;
-import com.example.progettoFinale.recordsDTO.FerieApprovazioneDTO;
-import com.example.progettoFinale.recordsDTO.FerieDTO;
-import com.example.progettoFinale.recordsDTO.FerieListDateStatoDTO;
-import com.example.progettoFinale.recordsDTO.FerieRespDTO;
+import com.example.progettoFinale.recordsDTO.feriesDTO.FerieApprovazioneDTO;
+import com.example.progettoFinale.recordsDTO.feriesDTO.FerieDTO;
+import com.example.progettoFinale.recordsDTO.feriesDTO.FerieListDateStatoDTO;
+import com.example.progettoFinale.recordsDTO.feriesDTO.FerieRespDTO;
 import com.example.progettoFinale.services.FerieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
