@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
+
 public record DipendenteDTO(
         @NotEmpty(message = "Il nome è obbligatorio!")
         @Size(min = 3, max = 30, message = "Il nome deve avere un minimo di 2 ad un massimo di 20 caratteri")
@@ -25,6 +27,8 @@ public record DipendenteDTO(
         String stipendio,
         @NotEmpty(message = "il ruolo è obbligatorio!")
         @Size(min = 3, max = 30, message = "i ruoli disponibili sono DIPENDENTE,MANAGER")
-        String ruolo
+        String ruolo,
+        @NotEmpty(message = "la data di assunzion è obbligatoria")
+        LocalDate dataAssunzione
 ) {
 }

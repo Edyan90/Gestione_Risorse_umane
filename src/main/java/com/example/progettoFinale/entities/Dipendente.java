@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -35,6 +36,8 @@ public class Dipendente implements UserDetails {
     @JsonIgnore
     private String password;
     private String avatar;
+    @Column(name = "data_assunzione")
+    private LocalDate dataAssunzione;
 
     @OneToMany(mappedBy = "dipendente", fetch = FetchType.EAGER)
     private List<Presenza> presenze;
@@ -42,14 +45,17 @@ public class Dipendente implements UserDetails {
     private List<Ferie> ferie;
     @OneToMany(mappedBy = "dipendente", fetch = FetchType.EAGER)
     private List<BustaPaga> bustepaga;
+    @OneToMany(mappedBy = "dipendente", fetch = FetchType.EAGER)
+    private List<Assenza> assenze;
 
-    public Dipendente(String nome, String cognome, String email, String username, Double stipendio, String password) {
+    public Dipendente(String nome, String cognome, String email, String username, Double stipendio, String password, LocalDate dataAssunzione) {
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;
         this.username = username;
         this.stipendio = stipendio;
         this.password = password;
+        this.dataAssunzione = dataAssunzione;
     }
 
     @Override

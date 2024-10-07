@@ -56,7 +56,8 @@ public class DipendentiService {
                 dipendenteDTO.email(),
                 dipendenteDTO.username(),
                 Double.parseDouble(dipendenteDTO.stipendio()),
-                bcrypt.encode(dipendenteDTO.password())
+                bcrypt.encode(dipendenteDTO.password()),
+                dipendenteDTO.dataAssunzione()
         );
         switch (dipendenteDTO.ruolo().toLowerCase()) {
             case "dipendente":
@@ -101,6 +102,7 @@ public class DipendentiService {
         found.setStipendio(Double.parseDouble(dipendenteDTO.stipendio()));
         found.setUsername(dipendenteDTO.username());
         found.setNome(dipendenteDTO.password());
+        found.setDataAssunzione(dipendenteDTO.dataAssunzione());
         switch (dipendenteDTO.ruolo().toLowerCase()) {
             case "dipendente":
                 found.setRuolo(RuoloType.DIPENDENTE);
