@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,7 +58,12 @@ public class FerieService {
         if (!ferieSovrapposte.isEmpty()) {
             throw new BadRequestEx("Esiste già una richiesta di ferie sovrapposta per questo dipendente.");
         }
-        Ferie ferie = new Ferie(currentDipendente, ferieDTO.dataInizio(), ferieDTO.dataFine(), StatoFerie.RICHIESTO);
+        Ferie ferie = new Ferie(currentDipendente,
+                ferieDTO.dataInizio(),
+                ferieDTO.dataFine(),
+                StatoFerie.RICHIESTO,
+                calcolaFerieMaturate(currentDipendente.getDataAssunzione()
+                ));
         this.ferieRepository.save(ferie);
         return ferie;
     }
@@ -144,6 +150,15 @@ public class FerieService {
 
     public List<Ferie> getStorico(Dipendente dipendente) {
         return this.ferieRepository.findByStoricoFerie(dipendente);
+    }
+
+
+    public int calcolaFerieMaturate(LocalDate dataAssunzione) {
+        LocalDate oggi = LocalDate.now();
+        long giorniTrascorsi = ChronoUnit.DAYS.between(dataAssunzione, oggi);
+        int giorniNellAnno = oggi.isLeapYear() ? 366 : 365;
+        int ferieMaturate = (int) ((giorniTrascorsi * 26) / giorniNellAnno);
+        return ferieMaturate;
     }
 
 }

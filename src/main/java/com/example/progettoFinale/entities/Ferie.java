@@ -31,11 +31,19 @@ public class Ferie {
     private LocalDate dataFine;
     @Enumerated(EnumType.STRING)
     private StatoFerie stato;
+    @Column(name = "ferie_maturate")
+    private Integer ferieMaturate;
 
-    public Ferie(Dipendente dipendente, LocalDate dataInizio, LocalDate dataFine, StatoFerie stato) {
+    public Ferie(Dipendente dipendente,
+                 LocalDate dataInizio,
+                 LocalDate dataFine,
+                 StatoFerie stato,
+                 Integer ferieMaturate) {
         this.dipendente = dipendente;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
         this.stato = stato;
+        this.ferieMaturate = ferieMaturate;
+
     }
 }
