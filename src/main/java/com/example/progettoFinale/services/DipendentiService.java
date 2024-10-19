@@ -66,6 +66,9 @@ public class DipendentiService {
             case "manager":
                 dipendente.setRuolo(RuoloType.MANAGER);
                 break;
+            case "admin":
+                dipendente.setRuolo(RuoloType.ADMIN);
+                break;
             default:
                 throw new BadRequestEx("Stato non valido: " + dipendenteDTO.ruolo() +
                         ". I valori validi sono: DIPENDENTE E MANAGER.");

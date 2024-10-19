@@ -28,8 +28,8 @@ public class FerieController {
     @GetMapping
     public Page<Ferie> findAll(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "dataInizio") String sortBy) {
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "stato") String sortBy) {
         return this.ferieService.findAll(page, size, sortBy);
     }
 

@@ -2,6 +2,7 @@ package com.example.progettoFinale.recordsDTO.dipendentiDTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
@@ -28,7 +29,7 @@ public record DipendenteDTO(
         @NotEmpty(message = "il ruolo è obbligatorio!")
         @Size(min = 3, max = 30, message = "i ruoli disponibili sono DIPENDENTE,MANAGER")
         String ruolo,
-        @NotEmpty(message = "la data di assunzion è obbligatoria")
+        @NotNull(message = "la data di assunzion è obbligatoria")
         LocalDate dataAssunzione
 ) {
 }

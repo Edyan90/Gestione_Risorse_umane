@@ -26,7 +26,7 @@ public class DipendentiController {
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public Page<Dipendente> findAll(@RequestParam(defaultValue = "0") int page,
-                                    @RequestParam(defaultValue = "10") int size,
+                                    @RequestParam(defaultValue = "20") int size,
                                     @RequestParam(defaultValue = "nome") String sortBy) {
         return this.dipendentiService.findAll(page, size, sortBy);
     }
