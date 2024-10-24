@@ -13,7 +13,9 @@ import com.example.progettoFinale.recordsDTO.assenzeDTO.GiustificazioneDTO;
 import com.example.progettoFinale.repositories.AssenzeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,18 +52,22 @@ public class AssenzeService {
         return this.assenzeRepository.save(assenza);
     }
 
-    public void findAndDeleteAssenza(UUID assenzaID, Dipendente dipendente) {
+    @Transactional
+    public void findAndDeleteAssenza(UUID assenzaID, Dipendente dipendente) throws Exception {
         Assenza assenza = this.findByID(assenzaID);
+        System.out.println("Assenza trovata: " + assenza);
         if (!assenza.getDipendente().getId().equals(dipendente.getId())
                 && !dipendente.getRuolo().equals(RuoloType.ADMIN)
                 && !dipendente.getRuolo().equals(RuoloType.MANAGER)) {
             throw new UnauthorizedEx("Non sei autorizzato ad eliminare la presenza");
         }
         this.assenzeRepository.delete(assenza);
+        this.assenzeRepository.flush();
+        System.out.println("Assenza eliminata.");
     }
 
-    public Assenza updateAssenza(UUID assenzaID, AssenzaDipendenteDTO assenzaDTO, Dipendente dipendenteAutenticato) {
-        Assenza found = this.findByID(assenzaID);
+    public Assenza updateAssenza(AssenzaDipendenteDTO assenzaDTO, Dipendente dipendenteAutenticato) {
+        Assenza found = this.findByID(assenzaDTO.dipendenteID());
         Dipendente dipendenteTrovato = found.getDipendente();
         if (!dipendenteTrovato.getId().equals(dipendenteAutenticato.getId())
                 && !assenzaDTO.dipendenteID().equals(dipendenteTrovato.getId())
@@ -98,5 +104,11 @@ public class AssenzeService {
         this.assenzeRepository.save(assenza);
     }
 
+    public List<Assenza> getAssenzePerStato(StatoAssenza stato) {
+        return assenzeRepository.findByStato(stato);
+    }
 
+    public List<Assenza> getAssenzeByPeriodo(LocalDate startDate, LocalDate endDate) {
+        return assenzeRepository.findAssenzeBetweenDates(startDate, endDate);
+    }
 }

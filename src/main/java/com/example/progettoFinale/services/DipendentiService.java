@@ -7,6 +7,7 @@ import com.example.progettoFinale.enums.RuoloType;
 import com.example.progettoFinale.exceptions.BadRequestEx;
 import com.example.progettoFinale.exceptions.NotFoundEx;
 import com.example.progettoFinale.recordsDTO.dipendentiDTO.DipendenteDTO;
+import com.example.progettoFinale.recordsDTO.dipendentiDTO.DipendenteEditDTO;
 import com.example.progettoFinale.repositories.DipendentiRepository;
 import com.example.progettoFinale.tools.MailgunSender;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,7 @@ public class DipendentiService {
 
     public void findAndDelete(UUID utenteID) {
         Dipendente dipendente = this.findByID(utenteID);
+        
         this.dipendentiRepository.delete(dipendente);
     }
 
@@ -121,6 +123,56 @@ public class DipendentiService {
         return this.dipendentiRepository.save(found);
     }
 
+    public Dipendente editDipendente(DipendenteEditDTO dipendenteDTO) {
+        Dipendente found = this.findByID(dipendenteDTO.dipendenteID());
+        this.dipendentiRepository.findByEmail(dipendenteDTO.email()).ifPresent(dipendente -> {
+            if (!dipendente.getEmail().equals(dipendenteDTO.email())) {
+                throw new BadRequestEx("L'email " + dipendenteDTO.email() + " è già in uso!");
+            }
+        });
+        if (dipendenteDTO.nome() != null) {
+            found.setNome(dipendenteDTO.nome());
+        }
+
+        if (dipendenteDTO.cognome() != null) {
+            found.setCognome(dipendenteDTO.cognome());
+        }
+
+        if (dipendenteDTO.email() != null) {
+            found.setEmail(dipendenteDTO.email());
+        }
+
+        if (dipendenteDTO.stipendio() != null) {
+            found.setStipendio(Double.parseDouble(dipendenteDTO.stipendio()));
+        }
+
+        if (dipendenteDTO.username() != null) {
+            found.setUsername(dipendenteDTO.username());
+        }
+
+        if (dipendenteDTO.password() != null) {
+            found.setPassword(dipendenteDTO.password());
+        }
+
+        if (dipendenteDTO.dataAssunzione() != null) {
+            found.setDataAssunzione(dipendenteDTO.dataAssunzione());
+        }
+        if (dipendenteDTO.ruolo() != null) {
+            switch (dipendenteDTO.ruolo().toLowerCase()) {
+                case "dipendente":
+                    found.setRuolo(RuoloType.DIPENDENTE);
+                    break;
+                case "manager":
+                    found.setRuolo(RuoloType.MANAGER);
+                    break;
+
+                default:
+                    throw new BadRequestEx("Stato non valido: " + dipendenteDTO.ruolo() +
+                            ". I valori validi sono: DIPENDENTE E MANAGER.");
+            }
+        }
+        return this.dipendentiRepository.save(found);
+    }
 
     public Dipendente avatarUpload(UUID dipendenteID, MultipartFile file) {
         try {

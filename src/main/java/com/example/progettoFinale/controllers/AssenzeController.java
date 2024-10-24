@@ -2,6 +2,7 @@ package com.example.progettoFinale.controllers;
 
 import com.example.progettoFinale.entities.Assenza;
 import com.example.progettoFinale.entities.Dipendente;
+import com.example.progettoFinale.enums.StatoAssenza;
 import com.example.progettoFinale.recordsDTO.assenzeDTO.AssenzaApprovazioneDTO;
 import com.example.progettoFinale.recordsDTO.assenzeDTO.AssenzaDipendenteDTO;
 import com.example.progettoFinale.recordsDTO.assenzeDTO.AssenzaRespDTO;
@@ -15,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +38,7 @@ public class AssenzeController {
 
     @DeleteMapping("/{assenzaID}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void findAndDelete(@PathVariable UUID assenzaID, @AuthenticationPrincipal Dipendente dipendente) {
+    public void findAndDelete(@PathVariable UUID assenzaID, @AuthenticationPrincipal Dipendente dipendente) throws Exception {
         this.assenzeService.findAndDeleteAssenza(assenzaID, dipendente);
     }
 
@@ -50,11 +52,11 @@ public class AssenzeController {
 
     @PutMapping("/{assenzaID}")
     @ResponseStatus(HttpStatus.OK)
-    public AssenzaRespDTO editAssenza(@PathVariable UUID assenzaID,
-                                      @RequestBody @Validated AssenzaDipendenteDTO assenzaDTO,
-                                      @AuthenticationPrincipal Dipendente dipendenteAutenticato) {
-        this.assenzeService.updateAssenza(assenzaID, assenzaDTO, dipendenteAutenticato);
-        return new AssenzaRespDTO("assenza modificata!", assenzaID);
+    public AssenzaRespDTO editAssenza(
+            @RequestBody @Validated AssenzaDipendenteDTO assenzaDTO,
+            @AuthenticationPrincipal Dipendente dipendenteAutenticato) {
+        this.assenzeService.updateAssenza(assenzaDTO, dipendenteAutenticato);
+        return new AssenzaRespDTO("assenza modificata!", assenzaDTO.dipendenteID());
     }
 
     @GetMapping("/lista-assenze/me")
@@ -79,5 +81,18 @@ public class AssenzeController {
     @GetMapping("/{assenzaID}")
     public Assenza getAssenza(@PathVariable UUID assenzaID, @AuthenticationPrincipal Dipendente dipendente) {
         return this.assenzeService.findByIDController(assenzaID, dipendente);
+    }
+
+    @GetMapping("/stato")
+    public List<Assenza> getAssenzePerStato(@RequestParam StatoAssenza stato) {
+        List<Assenza> assenze = assenzeService.getAssenzePerStato(stato);
+        return assenze;
+    }
+
+    @GetMapping("/periodo")//assenze/periodo?startDate=2024-01-01&endDate=2024-01-31
+    public List<Assenza> getAssenzeByPeriodo(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        return assenzeService.getAssenzeByPeriodo(start, end);
     }
 }

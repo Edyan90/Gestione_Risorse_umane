@@ -3,6 +3,7 @@ package com.example.progettoFinale.controllers;
 import com.example.progettoFinale.entities.Dipendente;
 import com.example.progettoFinale.recordsDTO.NewAdminDTO;
 import com.example.progettoFinale.recordsDTO.dipendentiDTO.DipendenteDTO;
+import com.example.progettoFinale.recordsDTO.dipendentiDTO.DipendenteEditDTO;
 import com.example.progettoFinale.recordsDTO.dipendentiDTO.DipendenteRespDTO;
 import com.example.progettoFinale.services.DipendentiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,13 @@ public class DipendentiController {
     @ResponseStatus(HttpStatus.OK)
     public DipendenteRespDTO updateProfile(@AuthenticationPrincipal Dipendente currentAuthenticateDipendente, @RequestBody @Validated DipendenteDTO dipendenteDTO) {
         return new DipendenteRespDTO(String.valueOf(this.dipendentiService.updateDipendente(currentAuthenticateDipendente.getId(), dipendenteDTO).getId()));
+    }
+
+    @PutMapping("/{dipendenteID}")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public DipendenteRespDTO updateProfileDipendente(@RequestBody @Validated DipendenteEditDTO dipendenteDTO) {
+        return new DipendenteRespDTO(String.valueOf(this.dipendentiService.editDipendente(dipendenteDTO)));
     }
 
     @PutMapping("/add-admin")
