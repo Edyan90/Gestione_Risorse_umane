@@ -39,13 +39,13 @@ public class Dipendente implements UserDetails {
     @Column(name = "data_assunzione")
     private LocalDate dataAssunzione;
 
-    @OneToMany(mappedBy = "dipendente", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dipendente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Presenza> presenze;
-    @OneToMany(mappedBy = "dipendente", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dipendente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Ferie> ferie;
-    @OneToMany(mappedBy = "dipendente", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dipendente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<BustaPaga> bustepaga;
-    @OneToMany(mappedBy = "dipendente", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dipendente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Assenza> assenze;
 
     public Dipendente(String nome, String cognome, String email, String username, Double stipendio, String password, LocalDate dataAssunzione) {

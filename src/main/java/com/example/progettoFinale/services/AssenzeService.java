@@ -11,9 +11,9 @@ import com.example.progettoFinale.recordsDTO.assenzeDTO.AssenzaApprovazioneDTO;
 import com.example.progettoFinale.recordsDTO.assenzeDTO.AssenzaDipendenteDTO;
 import com.example.progettoFinale.recordsDTO.assenzeDTO.GiustificazioneDTO;
 import com.example.progettoFinale.repositories.AssenzeRepository;
+import com.example.progettoFinale.repositories.DipendentiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,6 +25,8 @@ public class AssenzeService {
     private AssenzeRepository assenzeRepository;
     @Autowired
     private DipendentiService dipendentiService;
+    @Autowired
+    private DipendentiRepository dipendentiRepository;
 
     public Assenza findByID(UUID assenzaID) {
         return this.assenzeRepository.findById(assenzaID).orElseThrow(() -> new NotFoundEx(assenzaID));
@@ -34,9 +36,10 @@ public class AssenzeService {
         Assenza assenza = this.findByID(assenzaID);
         Dipendente dipendente1 = assenza.getDipendente();
         if (!dipendente1.getId().equals(dipendente.getId())
-                && !dipendente.getRuolo().equals(RuoloType.MANAGER)
-                && !dipendente.getRuolo().equals(RuoloType.ADMIN)) {
-            throw new UnauthorizedEx("Non si autorizzato a visualizzare questo dato!");
+                && !dipendente.getRuolo().equals(RuoloType.ADMIN)
+                && !dipendente.getRuolo().equals(RuoloType.MANAGER)) {
+
+            throw new UnauthorizedEx("Non sei autorizzato ad aggiornare  questa  presenza");
         }
         return this.assenzeRepository.findById(assenzaID).orElseThrow(() -> new NotFoundEx(assenzaID));
     }
@@ -52,19 +55,26 @@ public class AssenzeService {
         return this.assenzeRepository.save(assenza);
     }
 
-    @Transactional
-    public void findAndDeleteAssenza(UUID assenzaID, Dipendente dipendente) throws Exception {
+
+    public void findAndDeleteAssenza(UUID assenzaID) {
         Assenza assenza = this.findByID(assenzaID);
-        System.out.println("Assenza trovata: " + assenza);
-        if (!assenza.getDipendente().getId().equals(dipendente.getId())
-                && !dipendente.getRuolo().equals(RuoloType.ADMIN)
-                && !dipendente.getRuolo().equals(RuoloType.MANAGER)) {
-            throw new UnauthorizedEx("Non sei autorizzato ad eliminare la presenza");
+        Dipendente dipendente = assenza.getDipendente();
+        dipendente.getAssenze().remove(assenza);
+        dipendente.setAssenze(dipendente.getAssenze());
+        this.dipendentiRepository.save(dipendente);
+        System.out.println(assenza.getId());
+        this.assenzeRepository.delete(assenza);
+    }
+
+    public void findAndDeleteAssenzaSelf(UUID assenzaID, Dipendente dipendente) {
+        Assenza assenza = this.findByID(assenzaID);
+        Dipendente dipendenteAssenza = assenza.getDipendente();
+        if (dipendente.getId().equals(dipendenteAssenza.getId())) {
+            throw new UnauthorizedEx("non sei autorizzato ad eliminare questa assenza");
         }
         this.assenzeRepository.delete(assenza);
-        this.assenzeRepository.flush();
-        System.out.println("Assenza eliminata.");
     }
+
 
     public Assenza updateAssenza(AssenzaDipendenteDTO assenzaDTO, Dipendente dipendenteAutenticato) {
         Assenza found = this.findByID(assenzaDTO.dipendenteID());

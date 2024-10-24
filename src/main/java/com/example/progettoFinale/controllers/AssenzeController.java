@@ -37,9 +37,17 @@ public class AssenzeController {
     }
 
     @DeleteMapping("/{assenzaID}")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void findAndDelete(@PathVariable UUID assenzaID) throws Exception {
+        System.out.println(assenzaID);
+        this.assenzeService.findAndDeleteAssenza(assenzaID);
+    }
+
+    @DeleteMapping("/me/{assenzaID}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void findAndDelete(@PathVariable UUID assenzaID, @AuthenticationPrincipal Dipendente dipendente) throws Exception {
-        this.assenzeService.findAndDeleteAssenza(assenzaID, dipendente);
+    public void findAndDeleteSelf(@AuthenticationPrincipal Dipendente dipendente, @PathVariable UUID assenzaID) {
+        this.assenzeService.findAndDeleteAssenzaSelf(assenzaID, dipendente);
     }
 
     @PostMapping("/assenza-manager")

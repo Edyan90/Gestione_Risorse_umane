@@ -90,7 +90,6 @@ public class DipendentiService {
 
     public void findAndDelete(UUID utenteID) {
         Dipendente dipendente = this.findByID(utenteID);
-        
         this.dipendentiRepository.delete(dipendente);
     }
 
