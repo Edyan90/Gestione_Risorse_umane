@@ -38,7 +38,7 @@ public class AssenzeController {
 
     @DeleteMapping("/{assenzaID}")
     @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findAndDelete(@PathVariable UUID assenzaID) throws Exception {
         System.out.println(assenzaID);
         this.assenzeService.findAndDeleteAssenza(assenzaID);
